@@ -1,5 +1,4 @@
 
-const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
@@ -68,7 +67,6 @@ module.exports = {
                 { from: "source/index.html", to: "index.html" },
             ],
         }),
-		new MonacoWebpackPlugin(),
 	],
 	devtool: prod ? false : 'source-map',
 	devServer: {
