@@ -45,7 +45,8 @@ export const make_sim = () => {
                 );
             }
         }
-    }
+        obj.redraw();
+    };
 
     obj.redraw = () => {
         for (const key of Object.getOwnPropertySymbols(draws)) {
@@ -63,10 +64,12 @@ export const make_sim = () => {
                 [last.type]: last,
                 [cur.type]: cur,
             };
+            last = null;''
             const input = map[Symbol.for("in")];
             const output = map[Symbol.for("out")];
             if (input == null) {
                 delete pairs[output.name];
+                reline();
             }
             if (output != null) {
                 if (pairs[output.name] == null) {
@@ -80,7 +83,6 @@ export const make_sim = () => {
                 reline();
             }
         }
-        obj.redraw();
     };
     obj.set = (name, value) => {
         cache[name] = value;
