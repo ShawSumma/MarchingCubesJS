@@ -27,6 +27,7 @@
     p {
         font-family: monospace;
         font-size: 200%;
+        margin-right: 1em;
         color: green;
         user-select: none;
     }

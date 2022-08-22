@@ -114,6 +114,7 @@ export const make_sim = () => {
         for (const key of Object.getOwnPropertySymbols(listens)) {
             listens[key](lines);
         }
+        reline();
     };
     setInterval(() => {
         obj.tick();

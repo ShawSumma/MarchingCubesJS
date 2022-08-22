@@ -18,7 +18,6 @@
     </Inputs>
     <Display>
         <input type="text" on:change={(e) => {
-            console.log(e.target.value);
             set(e.target.value);
         }}/>
     </Display>
