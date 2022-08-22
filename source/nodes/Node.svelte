@@ -48,6 +48,8 @@
 
 <style>
     .node {
+        min-width: 96px;
+        min-height: 64px;
         position: absolute;
         border-radius: 1em;
         display: flex;

@@ -8,12 +8,51 @@ export const make_sim = () => {
     const draws = Object.create(null);
     const listens = Object.create(null);
 
-    const lines = [];
+    let lines = [];
+
+    const reline = () => {
+        lines = [];
+        for (const src of Object.getOwnPropertySymbols(pairs)) {
+            for (const dest of Object.getOwnPropertySymbols(pairs[src])) {
+                const map = pairs[src][dest];
+                const input = map[Symbol.for("in")];
+                const output = map[Symbol.for("out")];
+                const t0 = output.self;
+                const t1 = input.self;
+                lines.push(
+                    [
+                        {
+                            x: () => {
+                                const val = t0.getBoundingClientRect();
+                                return val.left + val.width / 2;
+                            },
+                            y: () => {
+                                const val = t0.getBoundingClientRect();
+                                return (val.top + val.bottom) / 2;
+                            },
+                        },
+                        {
+                            x: () => {
+                                const val = t1.getBoundingClientRect();
+                                return val.left + val.width / 2;
+                            },
+                            y: () => {
+                                const val = t1.getBoundingClientRect();
+                                return (val.top + val.bottom) / 2;
+                            },
+                        }
+                    ]
+                );
+            }
+        }
+    }
+
     obj.redraw = () => {
         for (const key of Object.getOwnPropertySymbols(draws)) {
             draws[key](lines);
         }
     };
+
     let last = null;
     obj.select = (self, name, type) => {
         const cur = {self, name, type};
@@ -26,36 +65,20 @@ export const make_sim = () => {
             };
             const input = map[Symbol.for("in")];
             const output = map[Symbol.for("out")];
-            const t0 = output.self;
-            const t1 = input.self;
-            lines.push(
-                [
-                    {
-                        x: () => {
-                            const val = t0.getBoundingClientRect();
-                            return val.left + val.width / 2;
-                        },
-                        y: () => {
-                            const val = t0.getBoundingClientRect();
-                            return (val.top + val.bottom) / 2;
-                        },
-                    },
-                    {
-                        x: () => {
-                            const val = t1.getBoundingClientRect();
-                            return val.left + val.width / 2;
-                        },
-                        y: () => {
-                            const val = t1.getBoundingClientRect();
-                            return (val.top + val.bottom) / 2;
-                        },
-                    }
-                ]
-            );
-            if (pairs[output.name] == null) {
-                pairs[output.name] = Object.create(null);
+            if (input == null) {
+                delete pairs[output.name];
             }
-            pairs[output.name][input.name] = true;
+            if (output != null) {
+                if (pairs[output.name] == null) {
+                    pairs[output.name] = Object.create(null);
+                }
+                if (pairs[output.name][input.name] != null) {
+                    delete pairs[output.name][input.name];
+                } else {
+                    pairs[output.name][input.name] = map;
+                }
+                reline();
+            }
         }
         obj.redraw();
     };

@@ -22,5 +22,6 @@
         padding: 1em;
         display: block;
         box-sizing: border-box;
+        min-width: max-content;
     }
 </style>
