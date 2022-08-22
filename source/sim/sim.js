@@ -86,7 +86,6 @@ export const make_sim = () => {
                 cache[dest] = cache[src];
             }
         }
-        console.log(listens);
         for (const key of Object.getOwnPropertySymbols(listens)) {
             listens[key](lines);
         }

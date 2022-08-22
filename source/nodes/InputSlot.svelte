@@ -28,7 +28,7 @@
     onDestroy(() => {
         unsetListen();
     });
-</script>va
+</script>
 
 <div
     bind:this={self}

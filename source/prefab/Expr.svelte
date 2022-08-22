@@ -10,14 +10,17 @@
 
     export let sim;
 
-    let set = () => {};
+    let set;
 </script>
 
 <Node color={'#999'} sim={sim}>
     <Inputs>
     </Inputs>
     <Display>
-        <input type="text" on:change={(e) => set(e.target.value)}/>
+        <input type="text" on:change={(e) => {
+            console.log(e.target.value);
+            set(e.target.value);
+        }}/>
     </Display>
     <Outputs>
         <OutputSlot {sim} bind:set={set}/>
@@ -29,7 +32,6 @@
         font-family: monospace;
         font-size: 200%;
         color: green;
-        width: min-content;
         padding: 1em;
     }
 

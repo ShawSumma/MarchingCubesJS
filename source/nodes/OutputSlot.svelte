@@ -9,6 +9,7 @@
     let self;
 
     export let set = (value) => {
+        console.log(value);
         sim.set(name, value);
     };
 
