@@ -1,15 +1,17 @@
 <script>
     import { onMount } from "svelte";
 
-    export let width, height, left=0, top=0, color=`#FFAAFF`;
+    export let left=0, top=0, color=`#FFAAFF`;
+
+    export let sim;
 
     let node;
 
+
     const update = () => {
-        node.style.width = `${width}px`;
-        node.style.height = `${height}px`;
         node.style.left = `${left}px`;
         node.style.top = `${top}px`;
+        sim.redraw();
     };
 
     let dragFrom = null;

@@ -1,24 +1,21 @@
 <script>
-    import Editor from "./Editor.svelte";
-    import Node from "./Node.svelte";
+    import Editor from "./nodes/Editor.svelte";
+    import Expr from "./prefab/Expr.svelte";
 
-    import Inputs from "./Inputs.svelte";
-    import InputSlot from "./InputSlot.svelte";
+    import Print from "./prefab/Print.svelte";
 
-    import Outputs from "./Outputs.svelte";
-    import OutputSlot from "./OutputSlot.svelte";
+    import Lines from "./nodes/Lines.svelte";
+
+    import {make_sim} from './sim/sim.js';
+
+    let sim = make_sim();
 </script>
 
 <div class="main">
+    <Lines {sim}/>
     <Editor>
-        <Node width={256} height={196} color='#FF77FF'>
-            <Inputs>
-                <InputSlot/>
-            </Inputs>
-            <Outputs>
-                <OutputSlot/>
-            </Outputs>
-        </Node>
+        <Expr {sim}/>
+        <Print {sim}/>
     </Editor>
 </div>
 
