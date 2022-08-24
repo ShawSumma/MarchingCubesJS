@@ -8,7 +8,7 @@
 
     export const name = Symbol();
 
-    export let value = null;
+    export const value = sim.name(name);
 
     let self;
 
@@ -16,18 +16,6 @@
         event.preventDefault();
         sim.select(self, name, Symbol.for("in"));
     };
-
-    let unsetListen;
-
-    onMount(() => {
-        unsetListen = sim.setListen(() => {
-            value = sim.get(name);
-        });
-    });
-
-    onDestroy(() => {
-        unsetListen();
-    });
 </script>
 
 <div

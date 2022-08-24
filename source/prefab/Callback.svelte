@@ -33,14 +33,15 @@
 
     onMount(() => {
         for (const value of values) {
-            value.handlers[sym] = async () => {
-                let got = await fn(...values.map(x => x.get()));
-                if (!Array.isArray(got)) {
-                    got = [got];
-                }
-                for (const index in got) {
-                    results[index].set(got[index]);
-                }
+            value.handlers[sym] = () => {
+                fn(values.map(x => x.get()), (got) => {
+                    if (!Array.isArray(got)) {
+                        got = [got];
+                    }
+                    for (const index in got) {
+                        results[index].set(got[index]);
+                    }
+                });
             };
         }
     });

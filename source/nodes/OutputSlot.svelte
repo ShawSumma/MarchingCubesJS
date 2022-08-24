@@ -1,4 +1,5 @@
 <script>
+
     export let color = '#FFFFFF';
     export let size = 30;
     export const data = null;
@@ -6,18 +7,14 @@
 
     let name = Symbol();
 
-    let self;
+    export const value = sim.name(name);
 
-    export let set = (value) => {
-        sim.set(name, value);
-    };
+    let self;
 
     const click = (event) => {
         event.preventDefault();
         sim.select(self, name, Symbol.for("out"));
     };
-
-    set(null);
 </script>
 
 <div

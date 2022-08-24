@@ -16,13 +16,21 @@
     onDestroy(() => {
         unsetDraw();
     });
+
+    let key = Symbol();
+
+    document.body.onresize = () => {
+        key = Symbol();
+    };
 </script>
 
-<svg viewBox="0 0 {document.body.scrollWidth} {document.body.scrollHeight}">
-    {#each lines as line}
-        <line x1={line[0].x()} y1={line[0].y()} x2={line[1].x()} y2={line[1].y()}></line>
-    {/each}
-</svg>
+{#key key}
+    <svg viewBox="0 0 {document.body.scrollWidth} {document.body.scrollHeight}">
+        {#each lines as line}
+            <line x1={line[0].x()} y1={line[0].y()} x2={line[1].x()} y2={line[1].y()}></line>
+        {/each}
+    </svg>
+{/key}
 
 <style>
     svg {

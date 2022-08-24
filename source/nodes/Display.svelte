@@ -19,7 +19,7 @@
         display: flex;
         max-width: 80%;
         flex-direction: column;
-        padding: 1em;
+        padding: 0.5em;
         display: block;
         box-sizing: border-box;
         min-width: max-content;

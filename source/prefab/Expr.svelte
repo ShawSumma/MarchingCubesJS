@@ -8,33 +8,49 @@
     import Outputs from "../nodes/Outputs.svelte";
     import OutputSlot from "../nodes/OutputSlot.svelte";
 
-    export let sim;
+    export let sim, left, top;
 
-    let set;
+    let value;
+
+    const change = (e) => {
+        value.set(e.target.innerText);
+    };
 </script>
 
-<Node color={'#999'} sim={sim}>
+<Node color={'#999'} {sim} {left} {top}>
     <Inputs>
     </Inputs>
     <Display>
-        <input type="text" on:change={(e) => {
-            set(e.target.value);
-        }}/>
+        <div class="input">
+            &quot;
+            <span type="text" role="textbox" on:keyup={change}  contenteditable/>
+            &quot;
+        </div>
     </Display>
     <Outputs>
-        <OutputSlot {sim} bind:set={set}/>
+        <OutputSlot {sim} bind:value={value}/>
     </Outputs>
 </Node>
 
 <style>
-    input {
-        font-family: monospace;
+    .input {
+        width: max(100%, 3em);
         font-size: 200%;
-        color: green;
-        padding: 1em;
+        background-color: white;
+        border-radius: 0.5em;
+        border: 0;
+        width: calc(100% - 0.5em);
+        padding: 0.3em;
     }
 
-    input:focus {
+    span {
+        font-family: monospace;
+        color: green;
+        box-shadow: none;
+        padding: 0.2em;
+    }
+
+    span:focus {
         outline: none;
     }
 </style>

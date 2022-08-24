@@ -33,18 +33,15 @@
         <InputSlot {sim} bind:value={value}/>
     </Inputs>
     <Display>
-        <p>{str}</p>
-    </Display>   
+        <iframe src={str} title={str}/>
+    </Display>
     <Outputs>
     </Outputs>
 </Node>
 
 <style>
-    p {
-        font-family: monospace;
-        font-size: 200%;
-        margin-right: 1em;
-        color: green;
-        user-select: none;
+    iframe {
+        width: 640px;
+        height: 480px;
     }
 </style>
