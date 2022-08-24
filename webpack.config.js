@@ -71,5 +71,8 @@ module.exports = {
 	devtool: prod ? false : 'source-map',
 	devServer: {
 		hot: true
-	}
+	},
+	watchOptions: {
+		poll: 100,
+	},
 };
