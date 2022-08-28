@@ -2,9 +2,7 @@
     import Lines from "./Lines.svelte";
     import Menu from "./menu/Menu.svelte";
     
-    export let sim;
-
-    export let options = Object.create(null);
+    export let sim, options;
 
     let menu;
 
@@ -15,17 +13,15 @@
     let last = null;
 
     const select = (name) => {
-        if (name != null && options[name] != null) {
-            const obj = Object.create(null);
-            obj.comp = options[name].comp;
-            obj.args = options[name].args();
-            obj.left = pos[0];
-            obj.top = pos[1];
-            elements.push(obj);
-            dom.push(null);
-            pos = null;
-            elements = elements;
-        }
+        const obj = Object.create(null);
+        obj.comp = options.comp;
+        obj.args = options.args(name);
+        obj.left = pos[0];
+        obj.top = pos[1];
+        elements.push(obj);
+        dom.push(null);
+        pos = null;
+        elements = elements;
     };
 
     const ctxmenu = (event) => {
@@ -64,7 +60,7 @@
     {/each}
     <div bind:this={menu}>
         {#if pos != null}
-            <Menu {sim} {pos} options={Object.keys(options)} {select}/>
+            <Menu {pos} {select}/>
         {/if}
     </div>
 </div>

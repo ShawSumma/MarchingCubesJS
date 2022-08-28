@@ -4,9 +4,6 @@
     export let select;
 
     export let pos;
-    export let sim = null;
-
-    export let options;
 
     let self, input;
 
@@ -27,38 +24,17 @@
         input.focus();
     });
 
-    const enter = () => {
-        for (const opt of options) {
-            if (wants(opt.name)) {
-                return select(opt);
-            }
+    const change = (event) => {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            select(event.target.innerText);
         }
-        return select(null);
-    };
-
-    const clear = setInterval(() => {
-        find = input.value;
-    }, 50);
-
-    onDestroy(() => {
-        clearInterval(clear);
-    });
-
-    sim;
+    }
 </script>
 
 <div class="menu" bind:this={self}>
     <div class="body">
-        <input bind:this={input} on:enter={() => enter()}/>
-        {#key find}
-            {#each options as opt}
-                {#if wants(opt)}
-                <div class="entry">
-                    <button on:click={() => select(opt)}>{opt}</button>
-                </div>
-                {/if}
-            {/each}
-        {/key}
+        <span type="text" role="textbox" on:keydown={change} bind:this={input} contenteditable/>
     </div>
 </div>
 
@@ -79,22 +55,14 @@
         background-color: #999999;
     }
 
-    .entry {
-        padding-top: 0.5em;
-        width: 100%;
-    }
-
-    input {
-        border: none;
+    span {
+        width: max-content;
+        min-width: 3em;
+        padding: 0.5em;
         outline: none;
-        font-size: 100%;
-        height: 2em;
-    }
-
-    button {
-        border-radius: 0;
-        border: 0;
-        height: 2em;
-        width: 100%;
+        font-size: 150%;
+        color: green;
+        background-color: 1em;
+        background-color: white;
     }
 </style>
