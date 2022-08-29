@@ -1,13 +1,12 @@
 <script>
+    import { onMount } from "svelte";
 
     export let color = '#FFFFFF';
     export let size = 30;
     export const data = null;
     export let sim;
 
-    let name = Symbol();
-
-    export const value = sim.name(name);
+    export let name;
 
     let self;
 
@@ -20,6 +19,7 @@
 <div
     bind:this={self}
     on:click={click}
+    id={name}
     style:background-color={color}
     style:width="{size}px"
     style:height="{size}px"

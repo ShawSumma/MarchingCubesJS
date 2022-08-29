@@ -2,7 +2,28 @@
     import Lines from "./Lines.svelte";
     import Menu from "./menu/Menu.svelte";
     
-    export let sim, options;
+    import Ebrew from '../prefab/Ebrew.svelte';
+
+    export let sim;
+
+    export const save = () => {
+        const obj = Object.create(null);
+        obj.count = sim.count;
+        obj.lines = sim.cache;
+        obj.from = sim.from;
+        obj.calc = sim.node;
+        obj.visual = elements;
+        return JSON.stringify(obj);
+    };
+
+    export const load = (str) => {
+        const obj = JSON.parse(str);
+        sim.count = obj.count;
+        sim.cache = obj.lines;
+        sim.from = obj.from;
+        sim.node = obj.calc;
+        elements = obj.visual;
+    };
 
     let menu;
 
@@ -13,11 +34,14 @@
     let last = null;
 
     const select = (name) => {
+        if (pos == null) {
+            return;
+        }
         const obj = Object.create(null);
-        obj.comp = options.comp;
-        obj.args = options.args(name);
+        obj.source = name;
         obj.left = pos[0];
         obj.top = pos[1];
+        obj.name = sim.sym();
         elements.push(obj);
         dom.push(null);
         pos = null;
@@ -26,15 +50,18 @@
 
     const ctxmenu = (event) => {
         event.preventDefault();
+        let index = 0;
         for (const element of dom) {
             if (element != null && element.contains(event.target)) {
                 if (last == null || last !== element) {
                     last = element;
                 } else {
+                    elements.splice(index, 1);
                     element.remove();
                 }
                 return null;
             }
+            index += 1;
         }
         pos = [event.clientX, event.clientY];
         return false;
@@ -55,8 +82,8 @@
     <Lines {sim}/>
     {#each elements as element, input}
         <div bind:this={dom[input]}>
-            <svelte:component this={element.comp} sim={sim} left={element.left} top={element.top} {...element.args}></svelte:component>
-        </div>    
+            <Ebrew {sim} {...element} bind:left={element.left} bind:top={element.top}/>
+        </div>
     {/each}
     <div bind:this={menu}>
         {#if pos != null}

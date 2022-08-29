@@ -1,48 +1,50 @@
 
+import {ebrew, world} from './interp.js';
+
 export const make_sim = () => {
     const obj = Object.create(null);
     
-    const pairs = Object.create(null);
-    const cache = Object.create(null);
-
     const draws = Object.create(null);
+
+    obj.cache = Object.create(null);
+    obj.from = Object.create(null);
+    obj.nodes = Object.create(null);
 
     let lines = [];
 
     obj.redraw = () => {
         lines = [];
-        for (const src of Object.getOwnPropertySymbols(pairs)) {
-            for (const dest of Object.getOwnPropertySymbols(pairs[src])) {
-                const map = pairs[src][dest];
-                const input = map[Symbol.for("in")];
-                const output = map[Symbol.for("out")];
-                const t0 = output.self;
-                const t1 = input.self;
-                lines.push(
-                    [
-                        {
-                            x: () => {
-                                const val = t0.getBoundingClientRect();
-                                return val.left + val.width / 2;
-                            },
-                            y: () => {
-                                const val = t0.getBoundingClientRect();
-                                return (val.top + val.bottom) / 2;
-                            },
-                        },
-                        {
-                            x: () => {
-                                const val = t1.getBoundingClientRect();
-                                return val.left + val.width / 2;
-                            },
-                            y: () => {
-                                const val = t1.getBoundingClientRect();
-                                return (val.top + val.bottom) / 2;
-                            },
-                        }
-                    ]
-                );
+        for (const input of Object.keys(obj.cache)) {
+            const output = obj.cache[input];
+            const t0 = document.getElementById(input);
+            const t1 = document.getElementById(output);
+            if (t0 == null || t1 == null) {
+                continue;
             }
+            lines.push(
+                [
+                    {
+                        x: () => {
+                            const val = t0.getBoundingClientRect();
+                            return val.left + val.width / 2;
+                        },
+                        y: () => {
+                            const val = t0.getBoundingClientRect();
+                            return (val.top + val.bottom) / 2;
+                        },
+                    },
+                    {
+                        x: () => {
+                            const val = t1.getBoundingClientRect();
+                            return val.left + val.width / 2;
+                        },
+                        y: () => {
+                            const val = t1.getBoundingClientRect();
+                            return (val.top + val.bottom) / 2;
+                        },
+                    }
+                ]
+            );
         }
         for (const key of Object.getOwnPropertySymbols(draws)) {
             draws[key](lines);
@@ -62,54 +64,26 @@ export const make_sim = () => {
             last = null;
             const input = map[Symbol.for("in")];
             const output = map[Symbol.for("out")];
-            if (input == null) {
-                if (pairs[output.name] != null) {
-                    for (const dest of Object.getOwnPropertySymbols(pairs[output.name])) {
-                        cache[dest].proxy = null;                     
+            if (input == null || output == null) {
+                for (const key of Object.keys(obj.cache)) {
+                    if ((output != null && obj.cache[key] === output.name) || (input != null && key === input.name)) {
+                        delete obj.cache[key];
                     }
-                    cache[output.name].notify = [];
-                    delete pairs[output.name];
                 }
             } else {
-                cache[input.name].proxy = cache[output.name];
-                cache[output.name].notify.push(input.name);
-                cache[input.name].ping();
-                if (pairs[output.name] == null) {
-                    pairs[output.name] = Object.create(null);
+                if (obj.cache[input.name] == output.name) {
+                    delete obj.cache[input.name];
                 }
-                pairs[output.name][input.name] = map;
+                obj.cache[input.name] = output.name;
             }
             obj.redraw();
         }
     };
 
-    obj.name = (name) => {
-        const port = Object.create(null);
-        let value = null;
-        port.handlers = Object.create(null);
-        port.proxy = null;
-        port.notify = [];
-        port.ping = () => {
-            for (const name of port.notify) {
-                cache[name].ping();
-            }
-            for (const sym of Object.getOwnPropertySymbols(port.handlers)) {
-                port.handlers[sym]();
-            }
-        };
-        port.set = (arg) => {
-            value = arg;
-            port.ping();
-        };
-        port.get = () => {
-            if (port.proxy != null) {
-                return port.proxy.get();
-            } else {
-                return value;
-            }
-        };
-        cache[name] = port;
-        return port;
+    obj.count = 0;
+    
+    obj.sym = () => {
+        return `symbol-${obj.count++}`;
     };
 
     obj.setDraw = (func) => {
@@ -119,7 +93,60 @@ export const make_sim = () => {
             delete draws[sym];
         };
     };
+
+    obj.update = Object.create(null);
+
+    obj.run = () => {
+        const cache = Object.create(null);
+
+        const calc = (node) => {
+            const args = node.in.map(want);
+            try {
+                var {print, outputs} = ebrew(node.src, world(args));
+            } catch (e) {
+                return [];
+            }
+            node.text = print.map((arg) => String(arg)).join('\n');
+            return outputs;
+        };
+
+        const wantForce = (name) => {
+            if (obj.cache[name] != null) {
+                return want(obj.cache[name]);
+            }
+            if (obj.from[name] != null) {
+                const node = obj.nodes[obj.from[name]];
+                const outputs = calc(node);
+                for (const num in outputs) {
+                    if (node.out[num] === name) {
+                        return outputs[num];
+                    }
+                }
+            }
+            return null;
+        };
+
+        const want = (name) => {
+            if (name in cache) {
+                return cache[name];
+            } else {
+                const res = wantForce(name);
+                cache[name] = res;
+                return res;
+            }
+        };
+
+        for (const node of Object.keys(obj.nodes)) {
+            calc(obj.nodes[node]);
+        }
+
+        for (const name of Object.keys(obj.update)) {
+            obj.update[name]();
+        }
+    };
     
+    setInterval(obj.run, 500);
+
     window.sim = obj;
     
     return obj;

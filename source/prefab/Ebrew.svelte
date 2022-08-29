@@ -10,79 +10,94 @@
     import Outputs from "../nodes/Outputs.svelte";
     import OutputSlot from "../nodes/OutputSlot.svelte";
 
-    import {count, ebrew, world} from '../sim/interp.js';
+    import {count} from '../sim/interp.js';
 
     export let sim, left, top;
 
     export let source;
 
-    let {inputs, outputs} = count(source);
+    export let name;
 
-    const make = (n) => {
-        let res = [];
-        res.length = n;
-        return res;
+    let span;
+    
+    let namesInput = [];
+    let namesOutput = [];
+
+    if (sim.nodes[name] == null) {
+        sim.nodes[name] = Object.create(null);
+        sim.nodes[name].in = namesInput;
+        sim.nodes[name].out = namesOutput;
+        sim.nodes[name].src = source;
+        sim.nodes[name].text = '';
     }
 
-    let values = make(inputs);
+    namesInput = sim.nodes[name].in;
+    namesOutput = sim.nodes[name].out;
+    source = sim.nodes[name].src;
 
-    let results = make(outputs);
-
-    let printData = '';
-
-    const sym = Symbol();
-    
-    const calculate = () => {
-        const args = values.map(x => x.get());
-        const {print, outputs} = ebrew(input.innerText, world(args));
-        printData = print.map((arg) => String(arg)).join('\n');
-        for (const index in outputs) {
-            results[index].set(outputs[index]);
+    const update = () => {
+        source = span.innerText;
+        sim.nodes[name].src = source;
+        try {
+            var {inputs, outputs} = count(source);
+        } catch (e) {
+            console.log(e);
+            return;
         }
+        while (inputs > namesInput.length) {
+            const tmp = `${name}-${namesInput.length}`;
+            namesInput.push(tmp);
+        }
+        while (outputs > namesOutput.length) {
+            const tmp = `${name}-${namesOutput.length}`;
+            sim.from[tmp] = name;
+            namesOutput.push(tmp);
+        }
+        namesInput.length = inputs;
+        namesOutput.length = outputs;
+        console.log(namesInput, namesOutput);
     };
 
+    const keyup = () => {
+        update();
+    };
+
+    let key = Symbol();
+
     onMount(() => {
-        for (const value of values) {
-            value.handlers[sym] = calculate;
-        }
-        calculate();
+        span.innerText = source;
+        update();
+        sim.update[name] = () => {
+            key = Symbol();
+        };
     });
 
     onDestroy(() => {
-        for (const value of values) {
-            delete value.handlers[sym];
-        }
+        delete sim.update[name];
     });
-
-    const keyup = () => {
-        try {
-            const res = count(input.innerText);
-            inputs = res.inputs;
-            outputs = res.outputs;
-            calculate();
-        } catch (e) {
-            console.error(e);
-        }
-    };
-
-    let input;
 </script>
 
-<Node color={'#999'} {sim} {left} {top}>
+<Node color={'#999'} {sim} bind:left={left} bind:top={top}>
     <Inputs>
-        {#each make(inputs) as _,i}
-            <InputSlot {sim} bind:value={values[i]}/>
+        {#each namesInput as name}
+            {#key name}
+                <InputSlot {sim} {name}/>
+            {/key}
         {/each}
     </Inputs>
     <Display>
         <div class="out">
-            <span type="text" role="textbox" bind:this={input} on:keyup={keyup} contenteditable>{source}</span>
-            <p>{printData}</p>
+            <span type="text" role="textbox" bind:this={span} on:keyup={keyup} contenteditable></span>
+            {#key key}
+                <p>{sim.nodes[name].text}</p>
+            {/key}
         </div>
     </Display>
     <Outputs>
-        {#each make(outputs) as _,i}
-            <OutputSlot {sim} bind:value={results[i]}/>
+        {#each namesOutput as name}
+            {#key name}
+                <OutputSlot {sim} {name}/>
+            {/key}
         {/each}
     </Outputs>
 </Node>

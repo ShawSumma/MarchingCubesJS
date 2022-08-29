@@ -7,7 +7,6 @@
 
     let node;
 
-
     const update = () => {
         node.style.left = `${left}px`;
         node.style.top = `${top}px`;
