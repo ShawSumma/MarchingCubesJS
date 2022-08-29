@@ -34,9 +34,8 @@
     
     const calculate = () => {
         const args = values.map(x => x.get());
-        const {print, outputs} = ebrew(source, world(args));
+        const {print, outputs} = ebrew(input.innerText, world(args));
         printData = print.map((arg) => String(arg)).join('\n');
-        console.log(args, outputs);
         for (const index in outputs) {
             results[index].set(outputs[index]);
         }
@@ -55,14 +54,18 @@
         }
     });
 
-    let input;
-
-    const change = (event) => {
-        if (event.keyCode === 13) {
-            event.preventDefault();
-            select(event.target.innerText);
+    const keyup = () => {
+        try {
+            const res = count(input.innerText);
+            inputs = res.inputs;
+            outputs = res.outputs;
+            calculate();
+        } catch (e) {
+            console.error(e);
         }
     };
+
+    let input;
 </script>
 
 <Node color={'#999'} {sim} {left} {top}>
@@ -73,7 +76,7 @@
     </Inputs>
     <Display>
         <div class="out">
-            <span type="text" role="textbox" on:keydown={change} bind:this={input} contenteditable>{source}</span>
+            <span type="text" role="textbox" bind:this={input} on:keyup={keyup} contenteditable>{source}</span>
             <p>{printData}</p>
         </div>
     </Display>

@@ -6,6 +6,16 @@ const run = (ast, scope) => {
             case 'call': {
                 return run(ast.args[0], scope)(...ast.args.slice(1).map((arg) => run(arg, scope)));
             }
+            case 'lambda': {
+                const params = ast.args[0].args;
+                return (...args) => {
+                    const subscope = Object.create(scope);
+                    for (const index in params) {
+                        subscope[params[index]] = args[index];
+                    }
+                    return run(ast.args[1], subscope);
+                };
+            }
             default: {
                 console.error(ast.form);
                 throw new Error('bad ast form');
@@ -16,14 +26,17 @@ const run = (ast, scope) => {
         return scope[ast.repr];
     }
     if (ast instanceof Value) {
-        return ast.repr;
+        if (typeof ast.repr === 'bigint') {
+            return Number(ast.repr);
+        } else {
+            return ast.repr;
+        }
     }
     throw new Error('bad ast type');
 };
 
 export const world = (args) => {
     args = [...args];
-    console.log(args);
     const data = Object.create(null);
     data.__print = [];
     data.__outputs = [];
@@ -36,17 +49,48 @@ export const world = (args) => {
     data.print = (value) => {
         data.__print.push(value);
     };
+    data.add = (x, y) => {
+        return x + y;
+    };
+    data.sub = (x, y) => {
+        return x - y;
+    };
+    data.mul = (x, y) => {
+        return x * y;
+    };
+    data.div = (x, y) => {
+        return x / y;
+    };
+    data.mod = (x, y) => {
+        return x % y;
+    };
+    data.pow = (x, y) => {
+        return Math.pow(x, y);
+    };
+    data.do = (x, y) => {
+        return y;
+    };
+    data.let = (x, y) => {
+        return y(x);
+    }
     return data;
 };
 
 const install = (layer) => {
-    layer['out'] = new Binding('out', [], [new Binding('value')]);
-    layer['in'] = new Binding('in', [], []);
-    layer['print'] = new Binding('print', [], [new Binding('value')]);
+    layer['out'] = new Binding(new Ident('out'), [], [new Binding(new Ident('value'))]);
+    layer['in'] = new Binding(new Ident('in'), [], []);
+    layer['print'] = new Binding(new Ident('print'), [], [new Binding(new Ident('value'))]);
+    layer['add'] = new Binding(new Ident('add'), [], [new Binding(new Ident('lhs')), new Binding(new Ident('rhs'))]);
+    layer['sub'] = new Binding(new Ident('sub'), [], [new Binding(new Ident('lhs')), new Binding(new Ident('rhs'))]);
+    layer['mul'] = new Binding(new Ident('mul'), [], [new Binding(new Ident('lhs')), new Binding(new Ident('rhs'))]);
+    layer['div'] = new Binding(new Ident('div'), [], [new Binding(new Ident('lhs')), new Binding(new Ident('rhs'))]);
+    layer['mod'] = new Binding(new Ident('mod'), [], [new Binding(new Ident('lhs')), new Binding(new Ident('rhs'))]);
+    layer['pow'] = new Binding(new Ident('pow'), [], [new Binding(new Ident('lhs')), new Binding(new Ident('rhs'))]);
+    layer['do'] = new Binding(new Ident('do'), [], [new Binding(new Ident('lhs')), new Binding(new Ident('rhs'))]);
+    layer['let'] = new Binding(new Ident('let'), [new Ident('name')], [new Binding(new Ident('value')), new Binding(new Ident('in'), [], [new Binding(new Ident('name'))], ['name'])], ['name']);
 }
 
 export const ebrew = (src, scope) => {
-    console.log(scope);
     const parser = new Parser(src);
     install(parser.defs[0]);
     const node = parser.readExprMatch(new Binding(null));
