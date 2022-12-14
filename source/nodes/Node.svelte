@@ -7,7 +7,6 @@
 
     let node;
 
-
     const update = () => {
         node.style.left = `${left}px`;
         node.style.top = `${top}px`;
@@ -55,5 +54,6 @@
         display: flex;
         flex-direction: row;
         justify-content: space-between;
+        width: max-content;
     }
 </style>

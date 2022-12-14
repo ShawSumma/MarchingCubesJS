@@ -84,8 +84,10 @@
         {/each}
     </Inputs>
     <Display>
-        <div class="out">
+        <div class="entry">
             <span type="text" role="textbox" bind:this={input} on:keyup={keyup} contenteditable>{source}</span>
+        </div>
+        <div class="entry">
             <p>{printData}</p>
         </div>
     </Display>
@@ -97,18 +99,24 @@
 </Node>
 
 <style>
-    .out {
+    .entry {
         width: max-content;
         min-width: 3em;
-        padding: 0.5em;
         color: green;
         border-radius: 0.5em;
-        background-color: 1em;
         background-color: white;
+        width: auto;
+        border: 3px;
+        margin: 5px;
     }
 
     span {
         font-size: 150%;
         outline: none;
+        width: auto;
+    }
+
+    p {
+        display: flex;
     }
 </style>

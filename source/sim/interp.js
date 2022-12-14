@@ -49,22 +49,22 @@ export const world = (args) => {
     data.print = (value) => {
         data.__print.push(value);
     };
-    data.add = (x, y) => {
+    data.add = (y, x) => {
         return y + x;
     };
-    data.sub = (x, y) => {
+    data.sub = (y, x) => {
         return y - x;
     };
-    data.mul = (x, y) => {
+    data.mul = (y, x) => {
         return y * x;
     };
-    data.div = (x, y) => {
+    data.div = (y, x) => {
         return y / x;
     };
-    data.mod = (x, y) => {
+    data.mod = (y, x) => {
         return y % x;
     };
-    data.pow = (x, y) => {
+    data.pow = (y, x) => {
         return Math.pow(y, x);
     };
     data.do = (x, y) => {

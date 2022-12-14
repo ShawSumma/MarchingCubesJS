@@ -8,20 +8,14 @@
     .display {
         position: relative;
         align-self: center;
-        display: flex;
         flex-direction: column;
         align-content: center;
-        width: 100%;
-        flex-shrink: 1;
+        width: auto;
     }
 
     .entry {
         display: flex;
-        max-width: 80%;
+        width: auto;
         flex-direction: column;
-        padding: 0.5em;
-        display: block;
-        box-sizing: border-box;
-        min-width: max-content;
     }
 </style>

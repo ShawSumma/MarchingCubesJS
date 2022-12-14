@@ -50,7 +50,7 @@
         position: relative;
         display: flex;
         flex-direction: column;
-        padding: 1em;
+        padding: 0.5em;
         background-color: 1em;
         background-color: #999999;
     }
