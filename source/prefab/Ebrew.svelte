@@ -34,7 +34,11 @@
     
     const calculate = () => {
         const args = values.map(x => x.get());
-        const {print, outputs} = ebrew(input.innerText, world(args));
+        try {
+            var {print, outputs} = ebrew(input.innerText, world(args));
+        } catch (e) {
+            return;
+        }
         printData = print.map((arg) => String(arg)).join('\n');
         for (const index in outputs) {
             results[index].set(outputs[index]);
@@ -44,6 +48,11 @@
     onMount(() => {
         for (const value of values) {
             value.handlers[sym] = calculate;
+        }
+        for (const result of results) {
+            if (result == null) {
+                return;
+            }
         }
         calculate();
     });
@@ -82,7 +91,7 @@
     </Display>
     <Outputs>
         {#each make(outputs) as _,i}
-            <OutputSlot {sim} bind:value={results[i]}/>
+            <OutputSlot {sim} name={Symbol()} bind:value={results[i]}/>
         {/each}
     </Outputs>
 </Node>

@@ -1,12 +1,12 @@
 <script>
     import { onDestroy, onMount } from "svelte";
     
+    export let name;
+    
     export let color = '#FFFFFF';
     export let size = 30;
     export const data = null;
     export let sim;
-
-    export const name = Symbol();
 
     export const value = sim.name(name);
 

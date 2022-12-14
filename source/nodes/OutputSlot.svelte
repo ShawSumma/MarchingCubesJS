@@ -5,9 +5,7 @@
     export const data = null;
     export let sim;
 
-    let name = Symbol();
-
-    export const value = sim.name(name);
+    export let name = Symbol();
 
     let self;
 

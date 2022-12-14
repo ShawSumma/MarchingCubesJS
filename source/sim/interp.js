@@ -50,22 +50,22 @@ export const world = (args) => {
         data.__print.push(value);
     };
     data.add = (x, y) => {
-        return x + y;
+        return y + x;
     };
     data.sub = (x, y) => {
-        return x - y;
+        return y - x;
     };
     data.mul = (x, y) => {
-        return x * y;
+        return y * x;
     };
     data.div = (x, y) => {
-        return x / y;
+        return y / x;
     };
     data.mod = (x, y) => {
-        return x % y;
+        return y % x;
     };
     data.pow = (x, y) => {
-        return Math.pow(x, y);
+        return Math.pow(y, x);
     };
     data.do = (x, y) => {
         return y;
@@ -104,7 +104,12 @@ export const ebrew = (src, scope) => {
 export const count = (src) => {
     const parser = new Parser(src);
     install(parser.defs[0]);
-    const root = parser.readExprMatch(new Binding(null));
+    let root
+    try {
+        root = parser.readExprMatch(new Binding(null));
+    } catch (e) {
+        root = null;
+    }
     let inputs = 0;
     let outputs = 0;
     const collect = (node) => {
