@@ -5,11 +5,12 @@
 <style>
     .inputs {
         position: relative;
-        height: 100%;
         align-self: center;
-        transform: translateX(-50%);
         display: flex;
         flex-direction: column;
-        justify-content: space-evenly;
+        justify-content: space-between;
+        transform: translateX(-100%);
+        height: 100%;
+        width: calc(var(--slot-size) * 0.5);
     }
 </style>

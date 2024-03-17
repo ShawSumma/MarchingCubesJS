@@ -2,9 +2,8 @@
     import { onDestroy } from "svelte";
 
     export let name;
-
-    export let color = '#FFFFFF';
-    export const data = null;
+    
+    export let color = '#FFF';
     export let sim;
 
     export const value = sim.name(name);
@@ -13,11 +12,11 @@
 
     const click = (event) => {
         event.preventDefault();
-        sim.select(self, name, Symbol.for("out"));
+        sim.select(self, name, Symbol.for("in"));
     };
 
     onDestroy(() => {
-        sim.remove(self, name, Symbol.for("out"));
+        sim.remove(self, name, Symbol.for("in"));
     });
 </script>
 

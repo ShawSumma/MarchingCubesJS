@@ -1,38 +1,9 @@
 import { Parser, Binding, Ident, Form, Value } from "./ebrew.js";
+import { Compiler } from './compiler.js';
 
 const run = (ast, scope) => {
-    if (ast instanceof Form) {
-        switch(ast.form) {
-            case 'call': {
-                return run(ast.args[0], scope)(...ast.args.slice(1).map((arg) => run(arg, scope)));
-            }
-            case 'lambda': {
-                const params = ast.args[0].args;
-                return (...args) => {
-                    const subscope = Object.create(scope);
-                    for (const index in params) {
-                        subscope[params[index]] = args[index];
-                    }
-                    return run(ast.args[1], subscope);
-                };
-            }
-            default: {
-                console.error(ast.form);
-                throw new Error('bad ast form');
-            }
-        }
-    }
-    if (ast instanceof Ident) {
-        return scope[ast.repr];
-    }
-    if (ast instanceof Value) {
-        if (typeof ast.repr === 'bigint') {
-            return Number(ast.repr);
-        } else {
-            return ast.repr;
-        }
-    }
-    throw new Error('bad ast type');
+    const js = new Compiler().compile();
+    eval.apply(scope, );
 };
 
 export const world = (args) => {

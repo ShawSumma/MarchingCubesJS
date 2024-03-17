@@ -18,6 +18,9 @@
 
     let {inputs, outputs} = count(source);
 
+    let inputSymbols = [];
+    let outputSymbols = [];
+
     const make = (n) => {
         let res = [];
         res.length = n;
@@ -44,10 +47,11 @@
             console.error(e);
             return;
         }
-        console.log(print, outputs);
         printData = print.map((arg) => String(arg)).join('\n');
         for (const index in outputs) {
-            results[index].set(outputs[index]);
+            if (results[index] !== undefined) {
+                results[index].set(outputs[index]);
+            }
         }
     };
 
@@ -69,7 +73,7 @@
         }
     });
 
-    const keyup = () => {
+    const update = () => {
         try {
             const res = count(input.innerText);
             inputs = res.inputs;
@@ -84,24 +88,30 @@
 </script>
 
 <Node color={'#CCC'} {sim} {left} {top}>
-    <Inputs>
-        {#each make(inputs) as _,i}
-            <InputSlot {sim} name={Symbol()} bind:value={values[i]}/>
-        {/each}
-    </Inputs>
+    {#if inputs !== 0}
+        <Inputs>
+            {#each make(inputs) as _,i}
+                <InputSlot {sim} name={Symbol()} bind:value={values[i]}/>
+            {/each}
+        </Inputs>
+    {/if}
     <Display>
         <div class="entry">
-            <span class="text" type="text" role="textbox" tabindex="-1" bind:this={input} on:keyup={keyup} contenteditable>{source}</span>
+            <span class="text" type="text" role="textbox" tabindex="-1" bind:this={input} on:mouseleave={update} contenteditable>{source}</span>
         </div>
-        <div class="entry">
-            <p>{printData}</p>
-        </div>
+        {#if printData}
+            <div class="entry">
+                <p>{printData}</p>
+            </div>
+        {/if}
     </Display>
-    <Outputs>
-        {#each make(outputs) as _,i}
-            <OutputSlot {sim} name={Symbol()} bind:value={results[i]}/>
-        {/each}
-    </Outputs>
+    {#if outputs !== 0}
+        <Outputs>
+            {#each make(outputs) as _,i}
+                <OutputSlot {sim} name={Symbol()} bind:value={results[i]}/>
+            {/each}
+        </Outputs>
+    {/if}
 </Node>
 
 <style>
@@ -112,6 +122,11 @@
         width: auto;
         padding: 0.5em;
         min-width: 3em;
+    }
+
+    p {
+        font-size: 150%;
+        margin: 0;
     }
 
     span {
