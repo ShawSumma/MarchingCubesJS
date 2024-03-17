@@ -1,5 +1,5 @@
 <script>
-    import { onDestroy, onMount } from "svelte";
+    import { onMount } from "svelte";
 
     export let select;
 
@@ -34,7 +34,7 @@
 
 <div class="menu" bind:this={self}>
     <div class="body">
-        <span type="text" role="textbox" on:keydown={change} bind:this={input} contenteditable/>
+        <span class="text" type="text" role="textbox" tabindex="-1" on:keydown={change} bind:this={input} contenteditable/>
     </div>
 </div>
 
@@ -51,18 +51,14 @@
         display: flex;
         flex-direction: column;
         padding: 0.5em;
-        background-color: 1em;
-        background-color: #999999;
+        background-color: #CCC;
     }
 
-    span {
-        width: max-content;
+    .text {
         min-width: 3em;
         padding: 0.5em;
-        outline: none;
-        font-size: 150%;
         color: green;
-        background-color: 1em;
-        background-color: white;
+        background-color: #FFF;
+        font-size: 150%;
     }
 </style>

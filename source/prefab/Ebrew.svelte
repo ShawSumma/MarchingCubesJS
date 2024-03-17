@@ -34,11 +34,17 @@
     
     const calculate = () => {
         const args = values.map(x => x.get());
+        let print = [];
+        let outputs = [];
         try {
-            var {print, outputs} = ebrew(input.innerText, world(args));
+            const got = ebrew(input.innerText, world(args));
+            print = got.print;
+            outputs = got.outputs;
         } catch (e) {
+            console.error(e);
             return;
         }
+        console.log(print, outputs);
         printData = print.map((arg) => String(arg)).join('\n');
         for (const index in outputs) {
             results[index].set(outputs[index]);
@@ -77,15 +83,15 @@
     let input;
 </script>
 
-<Node color={'#999'} {sim} {left} {top}>
+<Node color={'#CCC'} {sim} {left} {top}>
     <Inputs>
         {#each make(inputs) as _,i}
-            <InputSlot {sim} bind:value={values[i]}/>
+            <InputSlot {sim} name={Symbol()} bind:value={values[i]}/>
         {/each}
     </Inputs>
     <Display>
         <div class="entry">
-            <span type="text" role="textbox" bind:this={input} on:keyup={keyup} contenteditable>{source}</span>
+            <span class="text" type="text" role="textbox" tabindex="-1" bind:this={input} on:keyup={keyup} contenteditable>{source}</span>
         </div>
         <div class="entry">
             <p>{printData}</p>
@@ -101,22 +107,14 @@
 <style>
     .entry {
         width: max-content;
-        min-width: 3em;
         color: green;
-        border-radius: 0.5em;
         background-color: white;
         width: auto;
-        border: 3px;
-        margin: 5px;
+        padding: 0.5em;
+        min-width: 3em;
     }
 
     span {
         font-size: 150%;
-        outline: none;
-        width: auto;
-    }
-
-    p {
-        display: flex;
     }
 </style>

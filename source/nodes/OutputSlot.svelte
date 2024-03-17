@@ -1,11 +1,13 @@
 <script>
+    import { onDestroy } from "svelte";
+
+    export let name;
 
     export let color = '#FFFFFF';
-    export let size = 30;
     export const data = null;
     export let sim;
 
-    export let name = Symbol();
+    export const value = sim.name(name);
 
     let self;
 
@@ -13,13 +15,22 @@
         event.preventDefault();
         sim.select(self, name, Symbol.for("out"));
     };
+
+    onDestroy(() => {
+        sim.remove(self, name, Symbol.for("out"));
+    });
 </script>
 
 <div
     bind:this={self}
     on:click={click}
     style:background-color={color}
-    style:width="{size}px"
-    style:height="{size}px"
-    style:border-radius="{size / 2}px"
 />
+
+<style>
+    div {
+        width: var(--slot-size);
+        height: var(--slot-size);
+        border-radius: calc(var(--slot-size) * 0.5);
+    }
+</style>

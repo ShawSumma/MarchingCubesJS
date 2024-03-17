@@ -6,9 +6,9 @@
     .outputs {
         position: relative;
         align-self: center;
-        transform: translateX(50%);
         display: flex;
         flex-direction: column;
         justify-content: space-evenly;
+        width: calc(var(--slot-size) * 0.5);
     }
 </style>

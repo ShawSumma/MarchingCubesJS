@@ -1,10 +1,9 @@
 <script>
-    import { onDestroy, onMount } from "svelte";
-    
+    import { onDestroy } from "svelte";
+
     export let name;
     
-    export let color = '#FFFFFF';
-    export let size = 30;
+    export let color = '#FFF';
     export const data = null;
     export let sim;
 
@@ -16,13 +15,22 @@
         event.preventDefault();
         sim.select(self, name, Symbol.for("in"));
     };
+
+    onDestroy(() => {
+        sim.remove(self, name, Symbol.for("in"));
+    });
 </script>
 
 <div
     bind:this={self}
     on:click={click}
     style:background-color={color}
-    style:width="{size}px"
-    style:height="{size}px"
-    style:border-radius="{size / 2}px"
 />
+
+<style>
+    div {
+        width: var(--slot-size);
+        height: var(--slot-size);
+        border-radius: calc(var(--slot-size) * 0.5);
+    }
+</style>

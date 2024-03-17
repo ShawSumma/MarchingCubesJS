@@ -1,7 +1,5 @@
 <div class="display">
-    <div class="entry">
-        <slot/>
-    </div>
+    <slot/>
 </div>
 
 <style>
@@ -10,12 +8,8 @@
         align-self: center;
         flex-direction: column;
         align-content: center;
-        width: auto;
-    }
-
-    .entry {
         display: flex;
-        width: auto;
         flex-direction: column;
+        padding: 0.5em;
     }
 </style>

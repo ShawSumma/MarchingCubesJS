@@ -2,7 +2,7 @@
 export const make_sim = () => {
     const obj = Object.create(null);
     
-    const pairs = Object.create(null);
+    let pairs = Object.create(null);
     const cache = Object.create(null);
 
     const draws = Object.create(null);
@@ -80,6 +80,18 @@ export const make_sim = () => {
                 pairs[output.name][input.name] = map;
             }
             obj.redraw();
+        }
+    };
+
+    obj.remove = (self, name, type) => {
+        if (type == Symbol.for('out')) {
+            if (pairs[name] != null) {
+                for (const dest of Object.getOwnPropertySymbols(pairs[name])) {
+                    cache[dest].proxy = null;                     
+                }
+                cache[name].notify = [];
+                delete pairs[name];
+            }
         }
     };
 

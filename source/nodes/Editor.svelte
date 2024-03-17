@@ -1,6 +1,6 @@
 <script>
     import Lines from "./Lines.svelte";
-    import Menu from "./menu/Menu.svelte";
+    import Menu from "./Menu.svelte";
     
     export let sim, options;
 

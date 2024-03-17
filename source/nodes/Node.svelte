@@ -42,18 +42,24 @@
 
 <svelte:window  on:mousemove={dragEvent}/>
 <div class="node" bind:this={node} on:mousedown={dragBegin} on:mouseup={dragEnd} style:background-color={color}>
-    <slot/>
+    <div class="body" bind:this={node} on:mousedown={dragBegin} on:mouseup={dragEnd} style:background-color={color}>
+        <slot/>
+    </div>
 </div>
 
 <style>
     .node {
-        min-width: 96px;
-        min-height: 64px;
+        color: white;
         position: absolute;
-        border-radius: 1em;
+        width: max-content;
+        height: max-content;
+        flex-direction: row;
+        justify-content: space-evenly;
+    }
+    
+    .body {
+        position: relative;
         display: flex;
         flex-direction: row;
-        justify-content: space-between;
-        width: max-content;
     }
 </style>
