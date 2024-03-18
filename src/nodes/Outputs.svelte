@@ -1,15 +1,14 @@
-<div class="output-slot">
+<div class="output">
     <slot/>
 </div>
 
 <style>
-    .output-slot {
-        position: relative;
-        align-self: center;
+    .output {
         display: flex;
         flex-direction: column;
         justify-content: space-evenly;
-        width: calc(var(--slot-size) * 0.5);
-        outline: none;
+        align-items: center;
+        width: 0;
+        z-index: -1;
     }
 </style>

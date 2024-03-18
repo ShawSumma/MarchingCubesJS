@@ -1,17 +1,15 @@
-<div class="input-slot">
+<div class="input">
     <slot/>
 </div>
 
 <style>
-    .input-slot {
+    .input {
         position: relative;
-        align-self: center;
         display: flex;
         flex-direction: column;
         justify-content: space-evenly;
-        transform: translateX(-100%);
-        height: 100%;
-        width: calc(var(--slot-size) * 0.5);
-        outline: none;
+        align-items: center;
+        width: 0;
+        z-index: -1;
     }
 </style>

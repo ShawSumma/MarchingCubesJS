@@ -31,6 +31,7 @@
     };
 </script>
 
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <div class="editor" on:contextmenu={ctxmenu}>
     <Lines {sim}/>
     {#each elements as {left, top, node}}

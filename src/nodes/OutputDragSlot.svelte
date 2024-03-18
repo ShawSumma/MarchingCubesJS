@@ -1,7 +1,7 @@
 <script>
     import { onDestroy, onMount } from "svelte";
 
-    export let lines, stop, color;
+    export let sim, stop, color;
     let div;
 
     let x = 0;
@@ -9,12 +9,12 @@
     let xb = 0;
     let yb = 0;
 
-    let ln = lines.add({});
+    let ln = sim.lines.add({});
 
     const move = (event) => {
         x += event.movementX;
         y += event.movementY;
-        lines.move(ln, { 
+        sim.lines.move(ln, { 
             x1: xb,
             y1: yb,
             x2: xb + x,
@@ -26,10 +26,12 @@
         const {top, left, bottom, right} = div.getBoundingClientRect();
         xb = (left + right) * 0.5;
         yb = (top + bottom) * 0.5;
+        document.body.userSelect = 'none';
     });
 
     onDestroy(() => {
-        lines.remove(ln);
+        sim.lines.remove(ln);
+        delete document.body.userSelect;
     });
 </script>
 
@@ -46,9 +48,10 @@
 
 <style>
     div {
-        position: relative;
+        position: absolute;
         width: var(--slot-size);
         height: var(--slot-size);
         border-radius: calc(var(--slot-size) * 0.5);
+        cursor: grab;
     }
 </style>

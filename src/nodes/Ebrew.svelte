@@ -20,6 +20,7 @@
     let key = Symbol();
 
     const update = (event) => {
+        src = span.innerText;
         node.src = span.innerText;
         node.update();
         print = node.print;

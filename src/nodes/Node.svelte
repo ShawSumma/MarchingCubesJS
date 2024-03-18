@@ -5,7 +5,7 @@
 
     export let sim;
 
-    let node;
+    let node, body;
 
     const update = () => {
         node.style.left = `${left}px`;
@@ -15,11 +15,17 @@
 
     let dragFrom = null;
 
+    export const stopDrag = () => {
+        dragFrom = null;
+    };
+
     const dragEnd = () => {
         dragFrom = null;
     };
 
     const dragBegin = (event) => {
+        const target = event.target;
+        console.log(target);
         dragFrom = [event.clientX, event.clientY];
     };
 
@@ -40,9 +46,11 @@
     });
 </script>
 
-<svelte:window  on:mousemove={dragEvent}/>
+<svelte:window on:mousemove={dragEvent}/>
+
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <div class="node" bind:this={node} on:mousedown={dragBegin} on:mouseup={dragEnd} style:background-color={color}>
-    <div class="body" bind:this={node} on:mousedown={dragBegin} on:mouseup={dragEnd} style:background-color={color}>
+    <div class="body" bind:this={body} style:background-color={color}>
         <slot/>
     </div>
 </div>
@@ -55,10 +63,11 @@
         height: max-content;
         flex-direction: row;
         justify-content: space-evenly;
+        background-color: #CCC;
+        z-index: 0;
     }
     
     .body {
-        position: relative;
         display: flex;
         flex-direction: row;
     }

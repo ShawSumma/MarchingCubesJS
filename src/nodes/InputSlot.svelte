@@ -1,6 +1,5 @@
 <script>
     import InputDragSlot from "./InputDragSlot.svelte";
-    import DragSlot from "./OutputDragSlot.svelte";
 
     export let color = '#FFFFFF';
     
@@ -24,8 +23,9 @@
 </script>
 
 {#if run}
-    <InputDragSlot {color} {stop} lines={sim.lines}/>
+    <InputDragSlot {color} {stop} {sim}/>
 {:else}
+    <!-- svelte-ignore a11y-no-static-element-interactions -->
     <div
         on:mousedown={start}
         style:background-color={color}
@@ -37,5 +37,6 @@
         width: var(--slot-size);
         height: var(--slot-size);
         border-radius: calc(var(--slot-size) * 0.5);
+        cursor: grab;
     }
 </style>

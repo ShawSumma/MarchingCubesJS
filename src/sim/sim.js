@@ -101,12 +101,15 @@ export const Output = class {
 
 export const Sim = class {
     constructor() {
-        this.lines = [];
         this.selected = null;
     }
 
     redraw() {
 
+    }
+
+    dragged(obj, x, y) {
+        // console.log(obj.__proto__.constructor.name, x, y);
     }
 
     select(obj) {
