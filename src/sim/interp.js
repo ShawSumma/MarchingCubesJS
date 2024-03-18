@@ -1,9 +1,20 @@
-import { Parser, Binding, Ident, Form, Value } from "./ebrew.js";
+import { Parser, Binding, Ident, Form, Value } from "./parser.js";
 import { Compiler } from './compiler.js';
 
-const run = (ast, scope) => {
-    const js = new Compiler().compile();
-    eval.apply(scope, );
+const run = (ast, obj) => {
+    const scope = Object.create(null);
+    for (const key in obj) {
+        // scope[`eb_${key}`] = obj[key];
+        scope[key] = obj[key];
+    }
+    scope.rt_load = (name) => {
+        return obj[name];
+    };
+    scope.rt_str = (arr) => {
+        return String.fromCharCode(...arr);
+    };
+    const js = new Compiler(obj).compile(ast);
+    Function('env', js)(scope);
 };
 
 export const world = (args) => {
@@ -13,12 +24,14 @@ export const world = (args) => {
     data.__outputs = [];
     data.out = (value) => {
         data.__outputs.push(value);
+        return value;
     };
     data.in = () => {
         return args.shift();
     };
     data.print = (value) => {
         data.__print.push(value);
+        return value;
     };
     data.add = (y, x) => {
         return y + x;

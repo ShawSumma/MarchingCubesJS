@@ -6,8 +6,8 @@ const mangle = (name) => {
 };
 
 export const Compiler = class {
-    constructor() {
-        this.globals = {};
+    constructor(globals = {}) {
+        this.globals = globals;
     }
 
     compile(node) {
@@ -33,7 +33,7 @@ export const Compiler = class {
                 }
                 case 'extern': {
                     const name = nodeArgs[0].repr;
-                    return `const ${mangle(name)}=rt_load("${name}")`;
+                    return `const ${mangle(name)}=env.rt_load("${name}")`;
                 }
                 case 'call': {
                     const args = nodeArgs.map(arg => this.compile(arg));
@@ -48,11 +48,15 @@ export const Compiler = class {
                 }
             }
         } else if (node instanceof Ident) {
-            return `${mangle(node.repr)}`;
+            if (node.repr in this.globals) {
+                return `env.${node.repr}`;
+            } else {
+                return `${mangle(node.repr)}`;
+            }
         } else if (node instanceof Value) {
             if (typeof node.repr === 'string') {
                 const chars = Array.from(node.repr).map(x => String(x.charCodeAt(0))).join(',');
-                return `rt_str([${chars}])`;
+                return `env.rt_str([${chars}])`;
             } else {
                 return `${node.repr}`;
             }

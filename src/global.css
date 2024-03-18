@@ -18,5 +18,7 @@ span {
 }
 
 body {
-    --slot-size: 30px;
+    --slot-size: 20px;
+    --line-size: 0.3em;
+    --font-size: 1em;
 }

@@ -1,16 +1,16 @@
-<div class="inputs">
+<div class="input-slot">
     <slot/>
 </div>
 
 <style>
-    .inputs {
+    .input-slot {
         position: relative;
         align-self: center;
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
         transform: translateX(-100%);
-        height: 100%;
+        height: calc(var(--slot-size));
         width: calc(var(--slot-size) * 0.5);
+        outline: none;
     }
 </style>

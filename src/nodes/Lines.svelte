@@ -1,20 +1,14 @@
 <script>
-    import { onDestroy, onMount } from "svelte";
+    import { onMount } from "svelte";
 
     export let sim;
 
     let lines = [];
 
-    let unsetDraw;
-
     onMount(() => {
-        unsetDraw = sim.setDraw((data) => {
+        sim.draw = (data) => {
             lines = data;
-        });
-    });
-
-    onDestroy(() => {
-        unsetDraw();
+        };
     });
 
     let key = Symbol();

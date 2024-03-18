@@ -1,21 +1,12 @@
 <script>
     import Editor from "./nodes/Editor.svelte";
-    import Ebrew from "./prefab/Ebrew.svelte";
-    import {make_sim} from './sim/sim.js';
+    import { Sim } from "./sim/sim";
 
-    let sim = make_sim();
-
-    const options = Object.create(null);
-    options.comp = Ebrew;
-    options.args = (args) => {
-        const ret = Object.create(null);
-        ret.source = args;
-        return ret;
-    };
+    const sim = new Sim();
 </script>
 
 <div class="main">
-    <Editor {sim} {options}/>
+    <Editor {sim}/>
 </div>
 
 <style>

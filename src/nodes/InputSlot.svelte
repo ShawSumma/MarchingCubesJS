@@ -1,33 +1,41 @@
 <script>
-    import { onDestroy } from "svelte";
+    import InputDragSlot from "./InputDragSlot.svelte";
+    import DragSlot from "./OutputDragSlot.svelte";
 
-    export let name;
+    export let color = '#FFFFFF';
     
-    export let color = '#FFF';
-    export let sim;
+    export let obj;
 
-    export const value = sim.name(name);
+    let run = false;
 
-    let self;
-
-    const click = (event) => {
-        event.preventDefault();
-        sim.select(self, name, Symbol.for("in"));
+    const click = () => {
+        obj.select();
     };
 
-    onDestroy(() => {
-        sim.remove(self, name, Symbol.for("in"));
-    });
+    const start = (event) => {
+        run = true;
+        event.stopImmediatePropagation();
+    };
+
+    const stop = (event) => {
+        run = false;
+        event.stopImmediatePropagation();
+    };
 </script>
 
-<div
-    bind:this={self}
-    on:click={click}
-    style:background-color={color}
-/>
+{#if run}
+    <InputDragSlot {color} {stop}/>
+{:else}
+    <div
+        class="not"
+        on:mousedown={start}
+        style:background-color={color}
+    />
+{/if}
 
 <style>
     div {
+        position: absolute;
         width: var(--slot-size);
         height: var(--slot-size);
         border-radius: calc(var(--slot-size) * 0.5);

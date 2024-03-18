@@ -10,7 +10,7 @@
         align-content: center;
         display: flex;
         flex-direction: column;
-        padding: 0.5em;
-        gap: 0.5em;
+        padding: var(--line-size);
+        gap: var(--line-size);
     }
 </style>

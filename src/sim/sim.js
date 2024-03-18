@@ -1,138 +1,138 @@
+import { count, ebrew, world } from "./interp";
 
-export const make_sim = () => {
-    const obj = Object.create(null);
-    
-    let pairs = Object.create(null);
-    const cache = Object.create(null);
+export const Eval = class {
+    constructor(sim, src) {
+        this.sim = sim;
+        this.element = null;
+        this.print = '';
+        this.inputs = [];
+        this.outputs = [];
+        this.src = src;
+        count();
+        this.onupdate = () => {};
+    }
 
-    const draws = Object.create(null);
+    write(str) {
+        this.print += str;
+    }
 
-    let lines = [];
+    writeln(str) {
+        this.write(str);
+        this.write('\n');
+    }
 
-    obj.redraw = () => {
-        lines = [];
-        for (const src of Object.getOwnPropertySymbols(pairs)) {
-            for (const dest of Object.getOwnPropertySymbols(pairs[src])) {
-                const map = pairs[src][dest];
-                const input = map[Symbol.for("in")];
-                const output = map[Symbol.for("out")];
-                const t0 = output.self;
-                const t1 = input.self;
-                lines.push(
-                    [
-                        {
-                            x: () => {
-                                const val = t0.getBoundingClientRect();
-                                return val.left + val.width / 2;
-                            },
-                            y: () => {
-                                const val = t0.getBoundingClientRect();
-                                return (val.top + val.bottom) / 2;
-                            },
-                        },
-                        {
-                            x: () => {
-                                const val = t1.getBoundingClientRect();
-                                return val.left + val.width / 2;
-                            },
-                            y: () => {
-                                const val = t1.getBoundingClientRect();
-                                return (val.top + val.bottom) / 2;
-                            },
-                        }
-                    ]
-                );
-            }
+    count() {
+        if (this.src === this.counted) {
+            return;
         }
-        for (const key of Object.getOwnPropertySymbols(draws)) {
-            draws[key](lines);
-        }
-    };
 
-    let last = null;
-    obj.select = (self, name, type) => {
-        const cur = {self, name, type};
-        if (last == null) {
-            last = cur;
+        const {inputs, outputs} = count(this.src);
+
+        while (this.inputs.length < inputs) {
+            this.inputs.push(new Input(this));
+        }
+        this.inputs.length = inputs;
+
+        while (this.outputs.length < outputs) {
+            this.outputs.push(new Output(this));
+        }
+        this.outputs.length = outputs;
+
+        this.counted = this.src;
+    }
+
+    eval() {
+        const values = [];
+        for (const input of this.inputs) {
+            values.push(input.value);
+        }
+        const {outputs, print} = ebrew(this.src, world(values));
+        for (const key in this.outputs) {
+            this.outputs[key].value = outputs[key];
+        }
+        this.print = '';
+        for (const obj of print) {
+            this.print += JSON.stringify(obj, null, 2);
+            this.print += '\n';
+        }
+    }
+
+    update() {
+        this.count();
+        this.eval();
+        this.onupdate();
+    }
+}
+
+export const Input = class {
+    constructor(node) {
+        this.node = node;
+        this.pair = null;
+    }
+
+    get value() {
+        if (this.pair != null) {
+            return this.pair.value;
+        }
+        return null;
+    }
+
+    eval() {
+        this.node.update();
+    }
+
+    select() {
+        console.log('selected');
+    }
+};
+
+export const Output = class {
+    constructor(node) {
+        this.node = node;
+        this.data = null;
+        this.pairs = [];
+    }
+
+    get value() {
+        return this.data; 
+    }
+
+    set value(n) {
+        this.data = n;
+        for (const input of this.pairs) {
+            input.update();
+        }
+    }
+
+    select() {
+        console.log('selected');
+        this.node.sim.select(this);
+    }
+}
+
+export const Sim = class {
+    constructor() {
+        this.lines = [];
+        this.selected = null;
+    }
+
+    redraw() {
+        
+    }
+
+    select(obj) {
+        let input;
+        let output;
+        if (this.selected instanceof Input && obj instanceof Output) {
+            input = this.selected;
+            output = obj;
+        } else if (this.selected instanceof Output && obj instanceof Input) {
+            output = this.selected;
+            input = obj;
+        } else if (this.selected === null) {
+            this.selected = obj;
         } else {
-            const map = {
-                [last.type]: last,
-                [cur.type]: cur,
-            };
-            last = null;
-            const input = map[Symbol.for("in")];
-            const output = map[Symbol.for("out")];
-            if (input == null) {
-                if (pairs[output.name] != null) {
-                    for (const dest of Object.getOwnPropertySymbols(pairs[output.name])) {
-                        cache[dest].proxy = null;                     
-                    }
-                    cache[output.name].notify = [];
-                    delete pairs[output.name];
-                }
-            } else {
-                cache[input.name].proxy = cache[output.name];
-                cache[output.name].notify.push(input.name);
-                cache[input.name].ping();
-                if (pairs[output.name] == null) {
-                    pairs[output.name] = Object.create(null);
-                }
-                pairs[output.name][input.name] = map;
-            }
-            obj.redraw();
+            this.selected = null;
         }
-    };
-
-    obj.remove = (self, name, type) => {
-        if (type == Symbol.for('out')) {
-            if (pairs[name] != null) {
-                for (const dest of Object.getOwnPropertySymbols(pairs[name])) {
-                    cache[dest].proxy = null;                     
-                }
-                cache[name].notify = [];
-                delete pairs[name];
-            }
-        }
-    };
-
-    obj.name = (name) => {
-        const port = Object.create(null);
-        let value = null;
-        port.handlers = Object.create(null);
-        port.proxy = null;
-        port.notify = [];
-        port.ping = () => {
-            for (const name of port.notify) {
-                cache[name].ping();
-            }
-            for (const sym of Object.getOwnPropertySymbols(port.handlers)) {
-                port.handlers[sym]();
-            }
-        };
-        port.set = (arg) => {
-            value = arg;
-            port.ping();
-        };
-        port.get = () => {
-            if (port.proxy != null) {
-                return port.proxy.get();
-            } else {
-                return value;
-            }
-        };
-        cache[name] = port;
-        return port;
-    };
-
-    obj.setDraw = (func) => {
-        const sym = Symbol();
-        draws[sym] = func;
-        return () => {
-            delete draws[sym];
-        };
-    };
-    
-    window.sim = obj;
-    
-    return obj;
+    }
 };

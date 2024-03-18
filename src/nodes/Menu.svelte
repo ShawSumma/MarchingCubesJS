@@ -9,15 +9,6 @@
 
     let find = '';
 
-    const wants = (name) => {
-        let re = ['.*'];
-        for (const char of find) {
-            re.push(char);
-            re.push('.*');
-        }
-        return name.match(new RegExp(re.join(''), 'ig')) != null;
-    };
-
     onMount(() => {
         self.style.top = `${pos[1]}px`;
         self.style.left = `${pos[0]}px`;
@@ -50,15 +41,15 @@
         position: relative;
         display: flex;
         flex-direction: column;
-        padding: 0.5em;
+        padding: var(--line-size);
         background-color: #CCC;
     }
 
     .text {
         min-width: 3em;
-        padding: 0.5em;
+        padding: var(--line-size);
         color: green;
         background-color: #FFF;
-        font-size: 150%;
+        font-size: var(--font-size);
     }
 </style>
