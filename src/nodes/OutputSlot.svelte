@@ -3,7 +3,7 @@
 
     export let color = '#FFFFFF';
     
-    export let obj;
+    export let obj, sim;
 
     let run = false;
 
@@ -23,10 +23,9 @@
 </script>
 
 {#if run}
-    <OutputDragSlot {color} {stop}/>
+    <OutputDragSlot {color} {stop} lines={sim.lines}/>
 {:else}
     <div
-        class="not"
         on:mousedown={start}
         style:background-color={color}
     />

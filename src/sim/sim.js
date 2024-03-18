@@ -9,7 +9,6 @@ export const Eval = class {
         this.outputs = [];
         this.src = src;
         count();
-        this.onupdate = () => {};
     }
 
     write(str) {
@@ -60,7 +59,6 @@ export const Eval = class {
     update() {
         this.count();
         this.eval();
-        this.onupdate();
     }
 }
 
@@ -79,10 +77,6 @@ export const Input = class {
 
     eval() {
         this.node.update();
-    }
-
-    select() {
-        console.log('selected');
     }
 };
 
@@ -103,11 +97,6 @@ export const Output = class {
             input.update();
         }
     }
-
-    select() {
-        console.log('selected');
-        this.node.sim.select(this);
-    }
 }
 
 export const Sim = class {
@@ -117,7 +106,7 @@ export const Sim = class {
     }
 
     redraw() {
-        
+
     }
 
     select(obj) {

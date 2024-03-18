@@ -8,7 +8,7 @@
         align-self: center;
         display: flex;
         flex-direction: column;
-        height: calc(var(--slot-size));
+        justify-content: space-evenly;
         width: calc(var(--slot-size) * 0.5);
         outline: none;
     }

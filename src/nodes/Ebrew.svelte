@@ -12,17 +12,23 @@
 
     export let sim, left, top, node;
 
+    let span;
+    
+    let src = node.src;
+
     let print = '';
     let key = Symbol();
 
-    onMount(() => {
+    const update = (event) => {
+        node.src = span.innerText;
         node.update();
-    });
-
-    node.onupdate = () => {
         print = node.print;
         key = Symbol();
     };
+
+    onMount(() => {
+        update();
+    });
 </script>
 
 <Node color={'#CCC'} {sim} {left} {top}>
@@ -30,13 +36,13 @@
         {#if node.inputs.length !== 0}
             <Inputs>
                 {#each node.inputs as obj}
-                    <InputSlot {obj}/>
+                    <InputSlot {obj} {sim}/>
                 {/each}
             </Inputs>
         {/if}
         <Display>
             <div class="entry">
-                <span class="text" type="text" role="textbox" tabindex="-1" on:pointerleave={()=>node.update()} contenteditable>{node.src}</span>
+                <span class="text" type="text" role="textbox" bind:this={span} tabindex="-1" on:pointerleave={update} contenteditable>{src}</span>
             </div>
             {#if print !== ''}
                 <div class="entry">
@@ -47,7 +53,7 @@
         {#if node.outputs.length !== 0}
             <Outputs>
                 {#each node.outputs as obj}
-                    <OutputSlot {obj}/>
+                    <OutputSlot {obj} {sim}/>
                 {/each}
             </Outputs>
         {/if}
