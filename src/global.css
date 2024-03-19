@@ -22,3 +22,11 @@ body {
     --line-size: 0.3em;
     --font-size: 1em;
 }
+
+.grab-hand-grab {
+    --grab-hand: grab;
+}
+
+.grab-hand-grabbed {
+    --grab-hand: grabbed;
+}

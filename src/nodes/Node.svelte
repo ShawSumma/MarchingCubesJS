@@ -24,9 +24,9 @@
     };
 
     const dragBegin = (event) => {
-        const target = event.target;
-        console.log(target);
-        dragFrom = [event.clientX, event.clientY];
+        if (!event.handled) {
+            dragFrom = [event.clientX, event.clientY];
+        }
     };
 
     const dragEvent = (event) => {

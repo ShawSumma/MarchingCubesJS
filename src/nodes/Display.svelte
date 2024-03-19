@@ -19,7 +19,7 @@
         display: flex;
         flex-direction: column;
         align-content: center;
-        cursor: grab;
+        cursor: var(--grab-hand);
     }
 
     .display-no-drag {

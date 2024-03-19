@@ -13,12 +13,12 @@
 
     const start = (event) => {
         run = true;
-        event.stopImmediatePropagation();
+        event.handled = true;
     };
 
     const stop = (event) => {
         run = false;
-        event.stopImmediatePropagation();
+        event.handled = true;
     };
 </script>
 
@@ -37,6 +37,6 @@
         width: var(--slot-size);
         height: var(--slot-size);
         border-radius: calc(var(--slot-size) * 0.5);
-        cursor: grab;
+        cursor: var(--grab-hand);
     }
 </style>

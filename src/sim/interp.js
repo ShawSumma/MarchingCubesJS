@@ -71,7 +71,7 @@ const install = (layer) => {
     layer['mod'] = new Binding(new Ident('mod'), [], [new Binding(new Ident('lhs')), new Binding(new Ident('rhs'))]);
     layer['pow'] = new Binding(new Ident('pow'), [], [new Binding(new Ident('lhs')), new Binding(new Ident('rhs'))]);
     layer['do'] = new Binding(new Ident('do'), [], [new Binding(new Ident('lhs')), new Binding(new Ident('rhs'))]);
-    layer['let'] = new Binding(new Ident('let'), [new Ident('name')], [new Binding(new Ident('value')), new Binding(new Ident('in'), [], [new Binding(new Ident('name'))], ['name'])], ['name']);
+    layer['let'] = new Binding(new Ident('let'), [new Ident('name')], [new Binding(new Ident('name')), new Binding(new Ident('in'), [], [new Binding(new Ident('name'))], ['name'])], ['name']);
 }
 
 export const ebrew = (src, scope) => {
