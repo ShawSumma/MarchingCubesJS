@@ -1,6 +1,6 @@
 <script>
     import { Eval } from "../sim/sim";
-    import Ebrew from "./Ebrew.svelte";
+    import Ebrew from "./node/Ebrew.svelte";
     import Lines from "./Lines.svelte";
     import Menu from "./Menu.svelte";
 
@@ -48,5 +48,6 @@
     .editor {
         width: 100%;
         height: 100%;
+        user-select: none;
     }
 </style>

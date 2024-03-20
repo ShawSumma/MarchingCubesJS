@@ -7,8 +7,6 @@
 
     let self, input;
 
-    let find = '';
-
     onMount(() => {
         self.style.top = `${pos[1]}px`;
         self.style.left = `${pos[0]}px`;
@@ -20,12 +18,12 @@
             event.preventDefault();
             select(event.target.innerText);
         }
-    }
+    };
 </script>
 
 <div class="menu" bind:this={self}>
     <div class="body">
-        <span class="text" type="text" role="textbox" tabindex="-1" on:keydown={change} bind:this={input} contenteditable/>
+        <span class="text" type="text" role="textbox" tabindex="-1" on:keyup={change} bind:this={input} contenteditable/>
     </div>
 </div>
 

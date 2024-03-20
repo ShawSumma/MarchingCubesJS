@@ -1,8 +1,7 @@
 <script>
     import Editor from "./nodes/Editor.svelte";
-    import { Sim } from "./sim/sim";
 
-    const sim = new Sim();
+    export let sim;
 
     const up = () => {
         document.body.style.setProperty('--grab-hand', 'grab');

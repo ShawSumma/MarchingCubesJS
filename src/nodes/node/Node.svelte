@@ -10,7 +10,7 @@
     const update = () => {
         node.style.left = `${left}px`;
         node.style.top = `${top}px`;
-        sim.redraw();
+        sim.update();
     };
 
     let dragFrom = null;

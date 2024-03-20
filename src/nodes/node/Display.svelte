@@ -7,7 +7,7 @@
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div class="display">
-    <div class="display-no-drag">
+    <div>
         <div class="display-body" on:mousedown={prevent} on:mouseup={prevent}>
             <slot/>
         </div>
@@ -19,15 +19,15 @@
         display: flex;
         flex-direction: column;
         align-content: center;
+        padding: var(--line-size);
         cursor: var(--grab-hand);
     }
 
-    .display-no-drag {
-        padding: var(--line-size);
-        gap: var(--line-size);
-    }
-
     .display-body {
+        display: flex;
         cursor: auto;
+        flex-direction: column;
+        align-content: center;
+        gap: var(--line-size);
     }
 </style>

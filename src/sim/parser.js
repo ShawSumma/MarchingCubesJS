@@ -120,14 +120,6 @@ export const Parser = class {
     }
 
     get defs() {
-        // for (const scope of this.realDefs) {
-        //     for (const key of Object.keys(scope)) {
-        //         if (key !== scope[key].name.repr) {
-        //             throw new Error(key);
-        //             console.log(key + " = " + scope[key].toString());
-        //         }
-        //     }
-        // }
         return this.realDefs;
     }
 
@@ -240,7 +232,6 @@ export const Parser = class {
                 args.push(new Binding(name));
             }
         }
-        // console.log(args[0].name.repr, generic.map(x => x.toString()));
         return new Binding(args[0].name, generic, args.slice(1), allowed);
     }
 

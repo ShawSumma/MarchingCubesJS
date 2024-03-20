@@ -4,7 +4,6 @@ import { Compiler } from './compiler.js';
 const run = (ast, obj) => {
     const scope = Object.create(null);
     for (const key in obj) {
-        // scope[`eb_${key}`] = obj[key];
         scope[key] = obj[key];
     }
     scope.rt_load = (name) => {
@@ -56,7 +55,7 @@ export const world = (args) => {
     };
     data.let = (x, y) => {
         return y(x);
-    }
+    };
     return data;
 };
 
@@ -72,6 +71,7 @@ const install = (layer) => {
     layer['pow'] = new Binding(new Ident('pow'), [], [new Binding(new Ident('lhs')), new Binding(new Ident('rhs'))]);
     layer['do'] = new Binding(new Ident('do'), [], [new Binding(new Ident('lhs')), new Binding(new Ident('rhs'))]);
     layer['let'] = new Binding(new Ident('let'), [new Ident('name')], [new Binding(new Ident('name')), new Binding(new Ident('in'), [], [new Binding(new Ident('name'))], ['name'])], ['name']);
+    layer['delay'] = new Binding(new Ident('delay'), [], [new Binding(new Ident('ms')), new Binding(new Ident('then'), [], [])]);
 }
 
 export const ebrew = (src, scope) => {
